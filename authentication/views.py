@@ -34,4 +34,4 @@ class SignupView(generics.CreateAPIView):
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
    
-    print(f"\nRecover your password '{reset_password_token.user.email}' using this token: '{reset_password_token.key}' from API http://localhost:8000/api/auth/reset/confirm/."")
+    print(f"\nRecover your password '{reset_password_token.user.email}' using this token: '{reset_password_token.key}' from API http://localhost:8000/api/auth/reset/confirm/.")
