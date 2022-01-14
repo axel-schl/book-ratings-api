@@ -28,7 +28,7 @@ from books import views as book_views
 router = routers.DefaultRouter()
 router.register('books', book_views.BookViewSet, basename='Book')
 router.register('genres', book_views.GenreViewSet, basename='BookGenre')
-router.register('authors', book_views.BookViewSet, basename='Author')
+router.register('authors', book_views.AuthorViewSet, basename='Author')
 urlpatterns = [
     # Admin routes
     path('admin/', admin.site.urls),
@@ -36,6 +36,7 @@ urlpatterns = [
     # Api routes
     path('api/', include('authentication.urls')), 
     path('api/', include(router.urls)),
+    path('api/userbooks/', book_views.BookStoreUserViewSet.as_view()),
 ]
 
 if settings.DEBUG:

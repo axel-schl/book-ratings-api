@@ -10,6 +10,27 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         return make_password(value)
 
+    def validate_username(self, value):
+        value = value.replace(" ", "")  
+        try:
+            user = get_user_model().objects.get(username=value)
+        
+            if user == self.instance:
+                return value
+        except get_user_model().DoesNotExist:
+            return value
+        raise serializers.ValidationError("Username already exists")
+
+    def validate_email(self, value):
+    
+        try:
+            user = get_user_model().objects.get(email=value)
+        except get_user_model().DoesNotExist:
+            return value
+        raise serializers.ValidationError("Emal already exists")
+  
+
     class Meta:
         model = get_user_model()
         fields = ('email', 'username', 'password')
+

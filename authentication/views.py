@@ -35,3 +35,10 @@ class SignupView(generics.CreateAPIView):
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
    
     print(f"\nRecover your password '{reset_password_token.user.email}' using this token: '{reset_password_token.key}' from API http://localhost:8000/api/auth/reset/confirm/.")
+
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    http_method_names = ['get', 'patch']
+    def get_object(self):
+        if self.request.user.is_authenticated:
+            return self.request.user
