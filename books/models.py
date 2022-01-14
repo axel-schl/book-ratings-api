@@ -1,12 +1,12 @@
 import uuid
 from django.db import models
 from django.utils.text import slugify
-from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator, MaxLengthValidator
-from authentication.models import CustomUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 import datetime
 
 
-class Stars(models.Model):
+class Star(models.Model):
     book = models.ForeignKey('Book', on_delete=models.CASCADE)
     user = models.ForeignKey('authentication.CustomUser', on_delete=models.CASCADE)
     stars = models.PositiveIntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
@@ -19,15 +19,16 @@ class Book(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=150, verbose_name="Title")
-    author = models.ForeignKey('Author',verbose_name="Author", on_delete=models.CASCADE)
+    author = models.ForeignKey('Author',related_name="author_books",verbose_name="Author", on_delete=models.CASCADE)
     editorial = models.CharField(max_length=100, verbose_name="Editorial")
     edition_year = models.PositiveIntegerField(verbose_name="Edition Year",validators=[MaxValueValidator(datetime.datetime.now().year), MinValueValidator(1900)])
     description = models.TextField(null=True, blank=True, verbose_name="Description")
-    isbn = models.IntegerField(validators=[MaxLengthValidator(13),MinLengthValidator(13)], null=True, blank=True, verbose_name="ISBN")
-    genre = models.ForeignKey('BookGenre', verbose_name="Genre", on_delete=models.CASCADE) 
+    isbn = models.IntegerField( null=True, blank=True, verbose_name="ISBN")
+    genre = models.ForeignKey('BookGenre',related_name="books_genres", verbose_name="Genre", on_delete=models.CASCADE) 
     
 
-    def path_to_book(self, instance, filename):
+    def path_to_book(instance,filename):
+        
         return f'books/{instance.id}/{filename}'
 
     image_thumbnail = models.ImageField(upload_to=path_to_book, null=True, blank=True, verbose_name="Thumbnail Image")
@@ -38,12 +39,12 @@ class Book(models.Model):
         ordering = ['title']
 
     def n_reviews(self):
-        reviews = Stars.objects.filter(book=self)
+        reviews = Star.objects.filter(book=self)
         return len(reviews)
 
     def avg_stars(self):
         sum = 0
-        reviews = Stars.objects.filter(book=self)
+        reviews = Star.objects.filter(book=self)
         for review in reviews:
             sum += review.stars
         if len(reviews)>0:
@@ -65,7 +66,7 @@ class Author(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(BookGenre, self).save(*args, **kwargs)
+        super(Author, self).save(*args, **kwargs)
 
 class BookGenre(models.Model):
     name = models.CharField(

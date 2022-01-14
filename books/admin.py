@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Author, BookGenre, Stars
+from .models import Book, Author, BookGenre, Star
 
 
 @admin.register(Book)
@@ -15,6 +15,6 @@ class BookAdmin(admin.ModelAdmin):
 class AuthorAdmin(admin.ModelAdmin):
     readonly_fields = ["slug"]
 
-@admin.register(Stars)
+@admin.register(Star)
 class StarsAdmin(admin.ModelAdmin):
     pass
