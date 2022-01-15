@@ -146,5 +146,27 @@ A REST API build in Django for rating books with 1 to 5 stars.
             "genre": 3
         },
      ```
-      
-     You can still create new books from the admin console (credentials are available in admin.txt)
+     
+     As you can see, there are filters available to search for a particular book by author, genre, etc.
+     You can still create new books from the admin console (credentials are available in admin.txt)(```http://localhost:8000/admin```)
+     You can also do a get of the authors and genres of books in the urls:
+    
+     ```http://localhost:8000/api/authors```
+     ```http://localhost:8000/api/genres```
+  
+    * #### Rating Books
+
+    Once logged in, you can rate books in: (```http://localhost:8000/api/user_ratings```), making a post request in .json format using the uuid of the book to rate. 
+    
+    Suppose we want to rate Fictions by Jorge Luis Borges with 5 stars (of course!). It "uuid" is: "8f9d612f-bea2-46a1-afb9-b6294bcee1b9". So:
+    
+    ![img](https://i.imgur.com/OrdzmPB.png)
+    
+    Don't forget that the field is not "id", it is "uuid". If you want you can add "review", but it can be left blank or null.
+    
+    After refreshing, all the books ranked by the authenticated user will appear with its "avg_stars" attribute updated with the average rating of all users.
+    
+    Thank you for visiting my repository! 
+    
+    I will try in the future to add a recommendation system that works online with a larger database of users and books.
+    
