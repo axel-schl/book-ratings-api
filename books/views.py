@@ -2,8 +2,8 @@ from rest_framework import status,viewsets, views, filters, authentication, perm
 from django_filters.rest_framework import DjangoFilterBackend 
 from rest_framework.response import Response
 
-from .models import Book, BookGenre, Author, BookStoreUser
-from .serializers import BookSerializer, BookGenreSerializer, AuthorSerializer, BookStoreUserSerializer
+from .models import Book, BookGenre, Author, BookRatingUser
+from .serializers import BookSerializer, BookGenreSerializer, AuthorSerializer, BookRatingUserSerializer
 from .paginators import ExtendedPagination
 
 class BookViewSet(viewsets.ReadOnlyModelViewSet):
@@ -32,14 +32,14 @@ class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'slug'  
 
 
-class BookStoreUserViewSet(views.APIView):
+class BookRatingUserViewSet(views.APIView):
     
     authentication_classes = [authentication.SessionAuthentication]  
     permission_classes = [permissions.IsAuthenticated]
     
     def get(self, request, *args, **kwargs):
-        queryset = BookStoreUser.objects.filter(user=self.request.user)
-        serializer = BookStoreUserSerializer(queryset, many=True)
+        queryset = BookRatingUser.objects.filter(user=self.request.user)
+        serializer = BookRatingUserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     
@@ -52,7 +52,7 @@ class BookStoreUserViewSet(views.APIView):
                 status=status.HTTP_404_NOT_FOUND)
 
       
-        book_user, created = BookStoreUser.objects.get_or_create(
+        book_user, created = BookRatingUser.objects.get_or_create(
             user=request.user, book=book)
 
        

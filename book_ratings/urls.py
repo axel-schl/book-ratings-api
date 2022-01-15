@@ -36,7 +36,7 @@ urlpatterns = [
     # Api routes
     path('api/', include('authentication.urls')), 
     path('api/', include(router.urls)),
-    path('api/userbooks/', book_views.BookStoreUserViewSet.as_view()),
+    path('api/user_ratings/', book_views.BookRatingUserViewSet.as_view()),
 ]
 
 if settings.DEBUG:

@@ -8,7 +8,7 @@ from django.conf import settings
 
 import datetime
 
-class BookStoreUser(models.Model):
+class BookRatingUser(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     book = models.ForeignKey('Book', on_delete=models.CASCADE)
     stars = models.PositiveSmallIntegerField(null=True, validators=[MinValueValidator(1),MaxValueValidator(5)])
@@ -34,7 +34,7 @@ class Book(models.Model):
     
     def update_book_stars(sender, instance, **kwargs):
     
-        stars = BookStoreUser.objects.filter(book=instance.book).exclude(stars__isnull=True)
+        stars = BookRatingUser.objects.filter(book=instance.book).exclude(stars__isnull=True)
         count_stars = stars.count()
         sum_stars = stars.aggregate(Sum('stars')).get('stars__sum')
     
@@ -46,7 +46,7 @@ class Book(models.Model):
         instance.book.save()
 
 
-    post_save.connect(update_book_stars, sender=BookStoreUser)
+    post_save.connect(update_book_stars, sender=BookRatingUser)
 
     def path_to_book(instance,filename):
         
